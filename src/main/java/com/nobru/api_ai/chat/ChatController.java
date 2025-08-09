@@ -1,10 +1,11 @@
-package com.nobru.api_ai;
+package com.nobru.api_ai.chat;
 
+import com.nobru.api_ai.domain.ChatMessage;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/chat")
 public class ChatController {
 
     private final ChatClient chatClient;
@@ -13,10 +14,10 @@ public class ChatController {
         this.chatClient = chatClientBuilder.build();
     }
 
-    @GetMapping("/ai")
-    String generation(String userInput) {
+    @PostMapping("/send")
+    String generation(@RequestBody ChatMessage chatMessage) {
         return this.chatClient.prompt()
-                .user(userInput)
+                .user(chatMessage.message())
                 .call()
                 .content();
     }
