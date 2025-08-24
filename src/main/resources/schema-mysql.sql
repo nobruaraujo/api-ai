@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS SPRING_AI_CHAT_MEMORY (
+    `conversation_id` VARCHAR(36) NOT NULL,
+    `content` TEXT NOT NULL,
+    `type` ENUM('USER', 'ASSISTANT', 'SYSTEM', 'TOOL') NOT NULL,
+    `timestamp` TIMESTAMP NOT NULL,
+
+    INDEX `SPRING_AI_CHAT_MEMORY_CONVERSATION_ID_TIMESTAMP_IDX` (`conversation_id`, `timestamp`)
+);
+
+CREATE TABLE IF NOT EXISTS CHAT_MEMORY (
+    `conversation_id` CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    `user_id` VARCHAR(50) NOT NULL
+);
