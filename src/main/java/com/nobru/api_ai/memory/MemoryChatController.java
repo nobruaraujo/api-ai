@@ -1,10 +1,11 @@
 package com.nobru.api_ai.memory;
 
-import com.nobru.api_ai.domain.ChatMessage;
+import com.nobru.api_ai.chat.ChatMessageResponse;
+import com.nobru.api_ai.chat.Chat;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/chat/memory")
+@RequestMapping("/api/chat")
 public class MemoryChatController {
 
     private final MemoryChatService memoryChatService;
@@ -13,14 +14,9 @@ public class MemoryChatController {
         this.memoryChatService = memoryChatService;
     }
 
-    @PostMapping("/{chatId}")
-    ChatMessage sendMessageToOpenAI(@PathVariable String chatId, @RequestBody ChatMessage chatMessage) {
-        String response = memoryChatService.sendMessageToOpenAI(chatMessage.message(), chatId);
-        return new ChatMessage(response);
-    }
-
-    @PostMapping("/new" )
-    MemoryChatService.ChatResponse createChatSession(String message) {
-        return this.memoryChatService.createChatSession(message);
+    @PostMapping("/send")
+    public ChatMessageResponse sendMessageToOpenAI(@RequestBody Chat chat) {
+        String response = memoryChatService.sendMessageToOpenAI(chat.phoneNumber(), chat.message());
+        return new ChatMessageResponse(response);
     }
 }

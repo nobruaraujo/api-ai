@@ -1,40 +1,34 @@
 package com.nobru.api_ai.memory;
 
+import com.nobru.api_ai.barber.service.BookService;
+import com.nobru.api_ai.barber.tools.BarberTools;
+import com.nobru.api_ai.persona.PersonaConfig;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 public class MemoryChatService {
 
     private final ChatClient chatClient;
-    private final MemoryChatRepository memoryChatRepository;
+    private final BookService bookService;
 
-    public MemoryChatService(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, MemoryChatRepository memoryChatRepository) {
-        this.memoryChatRepository = memoryChatRepository;
+    public MemoryChatService(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, BookService bookService) {
+        this.bookService = bookService;
         this.chatClient = chatClientBuilder
-                .defaultAdvisors(
-                    MessageChatMemoryAdvisor.builder(chatMemory).build()
-                )
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .defaultSystem(PersonaConfig.SYSTEM_PERSONA)
+                .defaultTools(new BarberTools(bookService))
                 .build();
     }
 
-    String sendMessageToOpenAI(String message, String chatId) {
+    String sendMessageToOpenAI(String phoneNumber, String message) {
         return this.chatClient.prompt()
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, chatId))
+                //.options(ChatOptions.builder().temperature(0.8).maxTokens(25).build()) // TODO -> Check average token usage
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, phoneNumber))
                 .user(message)
                 .call()
                 .content();
-    }
-
-    record ChatResponse(String chatId, String response) {}
-
-    public ChatResponse createChatSession(String message) {
-        String chatId = memoryChatRepository.generateChatId(UUID.randomUUID().toString());
-        String response = sendMessageToOpenAI(message, chatId);
-        return new ChatResponse(chatId, response);
     }
 }
