@@ -1,4 +1,4 @@
-package com.nobru.api_ai.barber.domain;
+package com.nobru.api_ai.api.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

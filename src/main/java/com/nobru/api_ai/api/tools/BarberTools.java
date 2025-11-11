@@ -1,8 +1,8 @@
-package com.nobru.api_ai.barber.tools;
+package com.nobru.api_ai.api.tools;
 
-import com.nobru.api_ai.barber.domain.Book;
-import com.nobru.api_ai.barber.domain.BookResponse;
-import com.nobru.api_ai.barber.service.BookService;
+import com.nobru.api_ai.api.domain.Book;
+import com.nobru.api_ai.api.domain.BookResponse;
+import com.nobru.api_ai.api.service.BookService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
 

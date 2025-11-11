@@ -1,15 +1,15 @@
-package com.nobru.api_ai.barber.domain;
+package com.nobru.api_ai.api.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Entity
-@Getter
-@Setter
-public class Barber {
+public class BarberService {
+
     @Id
     private Long id;
     private String name;
+    private BigDecimal price;
 }

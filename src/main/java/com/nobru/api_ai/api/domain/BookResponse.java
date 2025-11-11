@@ -1,4 +1,4 @@
-package com.nobru.api_ai.barber.domain;
+package com.nobru.api_ai.api.domain;
 
 import java.util.List;
 

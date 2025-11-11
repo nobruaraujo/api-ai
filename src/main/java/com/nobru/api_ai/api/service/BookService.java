@@ -1,8 +1,8 @@
-package com.nobru.api_ai.barber.service;
+package com.nobru.api_ai.api.service;
 
-import com.nobru.api_ai.barber.domain.Book;
-import com.nobru.api_ai.barber.domain.BookResponse;
-import com.nobru.api_ai.barber.repository.BookRepository;
+import com.nobru.api_ai.api.domain.Book;
+import com.nobru.api_ai.api.domain.BookResponse;
+import com.nobru.api_ai.api.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 @Service

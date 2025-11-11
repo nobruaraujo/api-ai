@@ -1,8 +1,8 @@
-package com.nobru.api_ai.memory;
+package com.nobru.api_ai.ai.memory;
 
-import com.nobru.api_ai.barber.service.BookService;
-import com.nobru.api_ai.barber.tools.BarberTools;
-import com.nobru.api_ai.persona.PersonaConfig;
+import com.nobru.api_ai.api.service.BookService;
+import com.nobru.api_ai.api.tools.BarberTools;
+import com.nobru.api_ai.ai.persona.PersonaConfig;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;

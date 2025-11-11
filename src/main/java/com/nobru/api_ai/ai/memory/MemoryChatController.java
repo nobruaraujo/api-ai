@@ -1,7 +1,7 @@
-package com.nobru.api_ai.memory;
+package com.nobru.api_ai.ai.memory;
 
-import com.nobru.api_ai.chat.ChatMessageResponse;
-import com.nobru.api_ai.chat.Chat;
+import com.nobru.api_ai.ai.chat.ChatMessageResponse;
+import com.nobru.api_ai.ai.chat.Chat;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

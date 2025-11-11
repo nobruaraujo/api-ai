@@ -1,4 +1,4 @@
-package com.nobru.api_ai.persona;
+package com.nobru.api_ai.ai.persona;
 
 public class PersonaConfig {
 

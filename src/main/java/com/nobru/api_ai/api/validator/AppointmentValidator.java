@@ -1,9 +1,9 @@
-package com.nobru.api_ai.barber.validator;
+package com.nobru.api_ai.api.validator;
 
-import com.nobru.api_ai.barber.domain.Barber;
-import com.nobru.api_ai.barber.domain.BarberService;
-import com.nobru.api_ai.barber.domain.Book;
-import com.nobru.api_ai.barber.domain.BookResponse;
+import com.nobru.api_ai.api.domain.Barber;
+import com.nobru.api_ai.api.domain.BarberService;
+import com.nobru.api_ai.api.domain.Book;
+import com.nobru.api_ai.api.domain.BookResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
