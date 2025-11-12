@@ -31,4 +31,12 @@ public class BookService {
 
         return new BookResponse("Agendamento realizado com sucesso", false, null);
     }
+
+    public Book getBarberById(Long id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) {
+            throw new NullPointerException("Agendamento não encontrado");
+        }
+        return book;
+    }
 }

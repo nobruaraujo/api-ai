@@ -19,7 +19,7 @@ public class MemoryChatService {
         this.chatClient = chatClientBuilder
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .defaultSystem(PersonaConfig.SYSTEM_PERSONA)
-                .defaultTools(new BarberTools(bookService))
+                //.defaultTools(new BarberTools(bookService))
                 .build();
     }
 

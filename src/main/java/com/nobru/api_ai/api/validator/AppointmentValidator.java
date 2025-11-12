@@ -1,7 +1,7 @@
 package com.nobru.api_ai.api.validator;
 
 import com.nobru.api_ai.api.domain.Barber;
-import com.nobru.api_ai.api.domain.BarberService;
+import com.nobru.api_ai.api.domain.BarbershopServices;
 import com.nobru.api_ai.api.domain.Book;
 import com.nobru.api_ai.api.domain.BookResponse;
 
@@ -31,7 +31,7 @@ public class AppointmentValidator {
         }
     }
 
-    private void validateService(Set<BarberService> services) {
+    private void validateService(Set<BarbershopServices> services) {
         if (services == null) {
             throw new IllegalArgumentException("Serviço não pode ser nulo");
         }

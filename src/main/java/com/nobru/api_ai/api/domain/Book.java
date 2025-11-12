@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -16,21 +15,22 @@ import java.util.UUID;
 public class Book {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "barber_id")
     private Barber barber;
 
     @ManyToMany
-    private Set<BarberService> barberServices;
+    private Set<BarbershopServices> barbershopServices;
 
     private LocalDateTime time;
 
-    @PrePersist
-    public void generateId() {
-        if (id == null) {
-            id = UUID.randomUUID();
-        }
-    }
+//    @PrePersist
+//    public void generateId() {
+//        if (id == null) {
+//            id = UUID.randomUUID();
+//        }
+//    }
 }
