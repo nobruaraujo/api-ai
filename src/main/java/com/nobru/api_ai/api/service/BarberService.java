@@ -1,8 +1,11 @@
 package com.nobru.api_ai.api.service;
 
 import com.nobru.api_ai.api.domain.Barber;
+import com.nobru.api_ai.api.domain.dto.BarberRequest;
 import com.nobru.api_ai.api.repository.BarberRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BarberService {
@@ -13,12 +16,16 @@ public class BarberService {
         this.barberRepository = barberRepository;
     }
 
-    public Barber createBarber(Barber barberRequest) {
-        return barberRepository.save(barberRequest);
+    public Barber createBarber(BarberRequest barberRequest) {
+        return barberRepository.save(new Barber(barberRequest.name()));
     }
 
     public Barber getBarberById(Long id) {
         return barberRepository.findById(id)
                 .orElseThrow(() -> new NullPointerException("Barbeiro não encontrado"));
+    }
+
+    public List<Barber> getAllBarbers() {
+        return barberRepository.findAll();
     }
 }

@@ -1,5 +1,6 @@
 package com.nobru.api_ai.ai.memory;
 
+import com.nobru.api_ai.api.service.BarberService;
 import com.nobru.api_ai.api.service.BookService;
 import com.nobru.api_ai.api.tools.BarberTools;
 import com.nobru.api_ai.ai.persona.PersonaConfig;
@@ -12,14 +13,12 @@ import org.springframework.stereotype.Service;
 public class MemoryChatService {
 
     private final ChatClient chatClient;
-    private final BookService bookService;
 
-    public MemoryChatService(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, BookService bookService) {
-        this.bookService = bookService;
+    public MemoryChatService(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory, BookService bookService, BarberService barberService) {
         this.chatClient = chatClientBuilder
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .defaultSystem(PersonaConfig.SYSTEM_PERSONA)
-                //.defaultTools(new BarberTools(bookService))
+                .defaultTools(new BarberTools(bookService, barberService))
                 .build();
     }
 

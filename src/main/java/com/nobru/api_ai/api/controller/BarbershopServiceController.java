@@ -1,6 +1,7 @@
 package com.nobru.api_ai.api.controller;
 
 import com.nobru.api_ai.api.domain.BarbershopServices;
+import com.nobru.api_ai.api.domain.dto.BarbershopServicesRequest;
 import com.nobru.api_ai.api.service.BarbershopServicesService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public class BarbershopServiceController {
     }
 
     @PostMapping
-    public BarbershopServices createService(@RequestBody BarbershopServices request) {
+    public BarbershopServices createService(@RequestBody BarbershopServicesRequest request) {
         return service.createService(request);
     }
 

@@ -1,7 +1,7 @@
 package com.nobru.api_ai.api.tools;
 
-import com.nobru.api_ai.api.domain.Book;
-import com.nobru.api_ai.api.domain.BookResponse;
+import com.nobru.api_ai.api.domain.Barber;
+import com.nobru.api_ai.api.service.BarberService;
 import com.nobru.api_ai.api.service.BookService;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Component;
@@ -12,15 +12,19 @@ import java.util.List;
 public class BarberTools {
 
     private final BookService bookService;
+    private final BarberService barberService;
 
-    public BarberTools(BookService bookService) {
+    public BarberTools(BookService bookService, BarberService barberService) {
         this.bookService = bookService;
+        this.barberService = barberService;
     }
 
     @Tool(description = "Lista todos os barbeiros disponíveis na barbearia")
     public List<String> listarBarbeiros() {
-        // Aqui você chamaria sua API real
-        return List.of("João", "Carlos", "Bruno");
+        return barberService.getAllBarbers()
+                .stream()
+                .map(Barber::getName)
+                .toList();
     }
 
     @Tool(description = "Lista os horários disponíveis de um barbeiro específico")
@@ -35,8 +39,8 @@ public class BarberTools {
         return List.of("Degradê", "Social", "Máquina 1", "Barba completa");
     }
 
-    @Tool(description = "Agenda um corte com um barbeiro, em um horário e com um tipo de corte específico")
-    public BookResponse agendarCorte(Book request) {
-        return bookService.book(request);
-    }
+//    @Tool(description = "Agenda um corte com um barbeiro, em um horário e com um tipo de corte específico")
+//    public BookResponse agendarCorte(Book request) {
+//        return bookService.book(request);
+//    }
 }

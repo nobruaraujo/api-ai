@@ -2,6 +2,7 @@ package com.nobru.api_ai.api.controller;
 
 import com.nobru.api_ai.api.domain.Book;
 import com.nobru.api_ai.api.domain.BookResponse;
+import com.nobru.api_ai.api.domain.dto.BookRequest;
 import com.nobru.api_ai.api.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,8 @@ public class BookController {
     }
 
     @PostMapping
-    public BookResponse book(@RequestBody Book bookRequest) {
-        return bookService.book(bookRequest);
+    public BookResponse book(@RequestBody BookRequest request) {
+        return bookService.book(request);
     }
 
     @GetMapping("/{id}")

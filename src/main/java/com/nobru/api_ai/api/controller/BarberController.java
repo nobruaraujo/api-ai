@@ -1,6 +1,7 @@
 package com.nobru.api_ai.api.controller;
 
 import com.nobru.api_ai.api.domain.Barber;
+import com.nobru.api_ai.api.domain.dto.BarberRequest;
 import com.nobru.api_ai.api.service.BarberService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +16,8 @@ public class BarberController {
     }
 
     @PostMapping
-    public Barber createBarber(@RequestBody Barber barberRequest) {
-        return barberService.createBarber(barberRequest);
+    public Barber createBarber(@RequestBody BarberRequest request) {
+        return barberService.createBarber(request);
     }
 
     @GetMapping("/{id}")

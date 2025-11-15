@@ -27,10 +27,13 @@ public class Book {
 
     private LocalDateTime time;
 
-//    @PrePersist
-//    public void generateId() {
-//        if (id == null) {
-//            id = UUID.randomUUID();
-//        }
-//    }
+    public Book(Barber barber, Set<BarbershopServices> barbershopServices) {
+        this.barber = barber;
+        this.barbershopServices = barbershopServices;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.time = LocalDateTime.now();
+    }
 }
