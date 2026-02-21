@@ -1,11 +1,10 @@
 package com.nobru.api_ai.api.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record BarberRequest (
         @JsonProperty("name")
-        @NotNull
+        @NotBlank()
         String name
 ) {}

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BarbershopServices {
+public class ServiceType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class BarbershopServices {
     private String name;
     private BigDecimal price;
 
-    public BarbershopServices(String name, BigDecimal price) {
+    public ServiceType(String name, BigDecimal price) {
         this.name = name;
         this.price = price;
     }

@@ -1,9 +1,10 @@
 package com.nobru.api_ai.api.repository;
 
-import com.nobru.api_ai.api.domain.BarbershopServices;
+import com.nobru.api_ai.api.domain.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BarbershopServicesRepository extends JpaRepository<BarbershopServices, Long> {
+public interface BookingRepository extends JpaRepository<Booking, Long> {
+
 }

@@ -2,6 +2,7 @@ package com.nobru.api_ai.api.service;
 
 import com.nobru.api_ai.api.domain.Barber;
 import com.nobru.api_ai.api.domain.dto.BarberRequest;
+import com.nobru.api_ai.api.exception.BarberNotFoundException;
 import com.nobru.api_ai.api.repository.BarberRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ public class BarberService {
 
     public Barber getBarberById(Long id) {
         return barberRepository.findById(id)
-                .orElseThrow(() -> new NullPointerException("Barbeiro não encontrado"));
+                .orElseThrow(() -> new BarberNotFoundException(id));
     }
 
     public List<Barber> getAllBarbers() {
