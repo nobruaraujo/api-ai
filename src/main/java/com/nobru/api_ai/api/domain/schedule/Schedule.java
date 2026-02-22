@@ -1,7 +1,7 @@
 package com.nobru.api_ai.api.domain.schedule;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,11 +13,14 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_schedule_barber_date",
-                        columnNames = {"barber_id", "period"}
+                        columnNames = {"barber_id", "date"}
                 )
         }
 )
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Schedule {
 
     @Id
@@ -30,26 +33,6 @@ public class Schedule {
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimeSlot> timeSlots;
-
-    protected Schedule(){}
-
-    public Schedule(Long id, Long barberId, LocalDate date, List<TimeSlot> timeSlots) {
-        this.id = id;
-        this.barberId = barberId;
-        this.date = date;
-        this.timeSlots = timeSlots;
-    }
-
-    public Schedule(Long barberId, LocalDate date, List<TimeSlot> timeSlots) {
-        this.barberId = barberId;
-        this.date = date;
-        timeSlots.forEach(slot -> slot.setSchedule(this));
-        this.timeSlots = timeSlots;
-    }
-
-    public boolean hasAvailableTimeSlot() {
-        return timeSlots.stream().anyMatch(TimeSlot::isAvailable);
-    }
 
     public List<LocalTime> getAvailableTimes() {
         return timeSlots.stream()
@@ -64,7 +47,11 @@ public class Schedule {
                 .map(time -> new TimeSlot(time, true))
                 .toList();
 
-        Schedule schedule = new Schedule(barberId, date, timeSlots);
+        Schedule schedule = Schedule.builder()
+                .barberId(barberId)
+                .date(date)
+                .timeSlots(timeSlots)
+                .build();
 
         timeSlots.forEach(slot -> slot.setSchedule(schedule));
 
