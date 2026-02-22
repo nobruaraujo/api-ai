@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.nobru.api_ai.api.utils.URLMapping.ROOT_API_SERVICE_TYPE;
+
 @RestController
-@RequestMapping("/api/barbershop-services")
+@RequestMapping(ROOT_API_SERVICE_TYPE)
 public class ServiceTypeController {
 
     private final ServiceTypeService service;

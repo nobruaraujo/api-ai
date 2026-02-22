@@ -10,7 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.nobru.api_ai.api.utils.URLMapping.ROOT_API_SCHEDULES;
+
 @RestController
+@RequestMapping(ROOT_API_SCHEDULES)
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -19,13 +22,13 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @GetMapping("/barbers/{barberId}/available-times")
+    @GetMapping("/barbers/{barberId}")
     public AvailableTimesResponse getAvailableTimes(@PathVariable Long barberId, @RequestParam LocalDate date) {
         List<LocalTime> times = scheduleService.getAvailableTimes(barberId, date);
         return new AvailableTimesResponse(date, times);
     }
 
-    @PostMapping("/barbers/{barberId}/schedules")
+    @PostMapping("/barbers/{barberId}")
     public Schedule createSchedule(@PathVariable Long barberId, @RequestBody CreateScheduleRequest request) {
         return scheduleService.createSchedule(barberId, request);
     }

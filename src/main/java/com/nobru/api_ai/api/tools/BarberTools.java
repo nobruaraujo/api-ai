@@ -10,6 +10,7 @@ import com.nobru.api_ai.api.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -37,10 +38,22 @@ public class BarberTools {
         return barbers;
     }
 
-    @Tool(description = "Lista os horários disponíveis de um barbeiro específico. Caso o usuário não forneca a data, utilize hoje.")
-    public List<LocalTime> listarHorarios(Long barberId, String date) {
-        log.info("Listando horários disponíveis para o barbeiro com ID: {}", barberId);
-        List<LocalTime> availableTimes = scheduleService.getAvailableTimes(barberId, LocalDate.parse(date));
+    @Tool(description = "Busca o Id de um barbeiro pelo nome.")
+    public Long buscarBarbeiroPorNome(String name) {
+        log.info("Buscando barbeiro pelo nome: {}", name.toUpperCase());
+        Barber barber = barberService.getBarberByName(name.toUpperCase());
+        log.info("Barbeiro encontrado: {} com ID: {}", barber.getName(), barber.getId());
+        return barber.getId();
+    }
+
+    @Tool(description = "Lista os horários disponíveis de um barbeiro específico.")
+    public List<LocalTime> listarHorarios(
+            @ToolParam(description = "O identificador único (ID) do barbeiro. Obtenha este ID usando a ferramenta buscarBarbeiroPorNome")
+            Long barberId,
+            LocalDate date) {
+        Barber barber = barberService.getBarberById(barberId);
+        log.info("Listando horários disponíveis de hoje ({}) para o barbeiro com ID: {}", date, barber.getId());
+        List<LocalTime> availableTimes = scheduleService.getAvailableTimes(barber.getId(), date);
         log.info("Horários disponíveis encontrados: {}", availableTimes);
         return availableTimes;
     }

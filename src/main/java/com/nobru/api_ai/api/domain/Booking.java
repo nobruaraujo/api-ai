@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Set;
 
 @Entity
 @Table(
@@ -14,7 +12,7 @@ import java.util.Set;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_booking_barber_date_time",
-                        columnNames = {"barber_id", "period", "time"}
+                        columnNames = {"barber_id", "date", "time"}
                 )
         }
 )
