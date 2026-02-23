@@ -52,7 +52,7 @@ public class BarberTools {
             Long barberId,
             LocalDate date) {
         Barber barber = barberService.getBarberById(barberId);
-        log.info("Listando horários disponíveis de hoje ({}) para o barbeiro com ID: {}", date, barber.getId());
+        log.info("Listando horários disponíveis do dia ({}) para o barbeiro com ID: {}", date, barber.getId());
         List<LocalTime> availableTimes = scheduleService.getAvailableTimes(barber.getId(), date);
         log.info("Horários disponíveis encontrados: {}", availableTimes);
         return availableTimes;
