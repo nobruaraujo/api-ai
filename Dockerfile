@@ -12,10 +12,9 @@ WORKDIR /app
 # Copia o JAR do estágio de build de forma dinâmica
 COPY --from=build /app/target/*.jar app.jar
 
-# Variáveis de ambiente sem valores fixos (serão injetadas pelo Compose)
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/irmandade_bot?createDatabaseIfNotExist=true
-ENV SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
-ENV SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+ENV SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+ENV SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
 EXPOSE 8080
