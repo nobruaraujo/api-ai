@@ -6,6 +6,8 @@ import com.nobru.api_ai.api.service.BookingService;
 import com.nobru.api_ai.api.service.ScheduleService;
 import com.nobru.api_ai.api.service.ServiceTypeService;
 import com.nobru.api_ai.api.tools.BarberTools;
+import com.nobru.api_ai.whatsapp.domain.dto.IncomingWhatsAppMessage;
+import com.nobru.api_ai.whatsapp.gateway.ChatAIProcessor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 import static com.nobru.api_ai.ai.utils.ChatUtils.SYSTEM_PROMPT;
 
 @Service
-public class MemoryChatService {
+public class MemoryChatService implements ChatAIProcessor {
 
     private final ChatClient chatClient;
     private final BookingService bookingService;
@@ -34,16 +36,17 @@ public class MemoryChatService {
                 .build();
     }
 
-    String sendMessageToOpenAI(String phoneNumber, String message) {
-        //Message instruction1 = new SystemMessage("Procure sempre responder de forma educada e prestativa. Utilize as ferramentas disponíveis para fornecer informações precisas sobre os serviços da barbearia, horários disponíveis e agendamento de cortes. Se o usuário solicitar algo que não esteja relacionado aos serviços da barbearia, responda educadamente que você está aqui para ajudar com informações sobre a barbearia e seus serviços.");
-        //List<Message> messages = List.of(instruction1);
+    public String sendMessageToOpenAI(String phoneNumber, String message) {
         return this.chatClient.prompt()
-                //.options(ChatOptions.builder().temperature(0.1)/*.maxTokens(25)*/.build()) // TODO -> Check average token usage
                 .system(SYSTEM_PROMPT)
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, phoneNumber))
-                //.tools(new BarberTools(bookingService, barberService, serviceTypeService, scheduleService))
                 .user(message)
                 .call()
                 .content();
+    }
+
+    @Override
+    public String processMessage(IncomingWhatsAppMessage incomingWhatsAppMessage) {
+        return this.sendMessageToOpenAI(incomingWhatsAppMessage.userWhatsAppPhone(), incomingWhatsAppMessage.body());
     }
 }
