@@ -29,6 +29,8 @@ public class ChatUtils {
             
             A data e hora atual é: %s. Sempre utilize essa data como referência quando o cliente não especificar uma data.
             
+            Caso o cliente não diga qual tipo de corte será feito, sempre siga com o corte ID 1.
+            
             Lembre-se de seguir essas regras para garantir uma experiência positiva para os clientes e facilitar o processo de agendamento.
             """
             .formatted(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
