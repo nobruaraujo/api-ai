@@ -23,7 +23,7 @@ services:
     environment:
       TZ: "America/Sao_Paulo"
       SPRING_DATASOURCE_DATABASE: ${SPRING_DATASOURCE_DATABASE}
-      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d6ebopktgctc73dvjsjg-a.oregon-postgres.render.com/${SPRING_DATASOURCE_DATABASE}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-d8nekva8qa3s73f1ts10-a.oregon-postgres.render.com/${SPRING_DATASOURCE_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
