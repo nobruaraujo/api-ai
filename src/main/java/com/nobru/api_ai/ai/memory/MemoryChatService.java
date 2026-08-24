@@ -13,7 +13,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.stereotype.Service;
 
-import static com.nobru.api_ai.ai.utils.ChatUtils.SYSTEM_PROMPT;
+import static com.nobru.api_ai.ai.persona.PersonaConfig.SYSTEM_PROMPT;
 
 @Service
 public class MemoryChatService implements ChatAIProcessor {
