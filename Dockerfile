@@ -9,6 +9,9 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:24-jre
 WORKDIR /app
 
+# Instalar curl para healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Copia o JAR do estágio de build de forma dinâmica
 COPY --from=build /app/target/*.jar app.jar
 
