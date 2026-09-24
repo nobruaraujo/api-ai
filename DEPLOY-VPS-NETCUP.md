@@ -188,18 +188,15 @@ su - deploy
 mkdir -p ~/apps
 cd ~/apps
 
-# Clonar projeto (use SSH ou HTTPS)
+# Clonar projeto (use HTTPS)
 git clone https://github.com/nobruaraujo/api-ai.git
 cd api-ai
+
+# Verificar que está no branch main atualizado
+git pull origin main
 ```
 
 ### 3.2. Configurar variáveis de ambiente (SEGURO)
-```bash
-# Criar arquivo .env de produção
-nano .env.production
-```
-
-Conteúdo do `.env.production` (⚠️ NUNCA COMMITAR):
 
 **Primeiro, gere senhas fortes:**
 ```bash
@@ -210,7 +207,12 @@ openssl rand -base64 32
 openssl rand -base64 32
 ```
 
-Agora crie o arquivo com as senhas geradas:
+**Criar arquivo `.env` (Docker Compose lê automaticamente):**
+```bash
+nano .env
+```
+
+Conteúdo do `.env` (⚠️ NUNCA COMMITAR - já está no .gitignore):
 ```env
 # Database
 SPRING_DATASOURCE_DATABASE=api_ai_db
@@ -233,7 +235,13 @@ TZ=America/Sao_Paulo
 
 ### 3.3. Proteger arquivo .env
 ```bash
-chmod 600 .env.production
+chmod 600 .env
+```
+
+**Verificar se variáveis serão carregadas:**
+```bash
+docker compose -f docker-compose.prod.yaml config | grep POSTGRES
+# Deve mostrar os valores, não "<no value>" ou warnings
 ```
 
 ### 3.4. Criar docker-compose.prod.yaml
@@ -251,10 +259,16 @@ services:
       POSTGRES_DB: ${SPRING_DATASOURCE_DATABASE}
       POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SPRING_DATASOURCE_USERNAME} -d ${SPRING_DATASOURCE_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     # Não expor porta 5432 publicamente
     # ports:
     #   - "5432:5432"
@@ -263,12 +277,19 @@ services:
     build: .
     container_name: api-ai-app
     restart: always
-    env_file:
-      - .env.production
     ports:
       - "127.0.0.1:8080:8080"  # Bind apenas localhost
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_WHATSAPP_NUMBER: ${TWILIO_WHATSAPP_NUMBER}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - app-network
     healthcheck:
@@ -289,15 +310,31 @@ networks:
 
 ### 3.5. Build e deploy
 ```bash
-# Build da aplicação
+# Build da aplicação (Docker Compose lê .env automaticamente)
 docker compose -f docker-compose.prod.yaml build
 
 # Subir serviços
 docker compose -f docker-compose.prod.yaml up -d
 
-# Verificar logs
-docker compose -f docker-compose.prod.yaml logs -f
+# Verificar status (NÃO deve ter warnings sobre variáveis)
+docker compose -f docker-compose.prod.yaml ps
+
+# Deve mostrar ambos como "Up" ou "Up (healthy)"
 ```
+
+**Monitorar logs:**
+```bash
+# Ver todos os logs
+docker compose -f docker-compose.prod.yaml logs -f
+
+# Ver apenas logs do banco
+docker compose -f docker-compose.prod.yaml logs -f db
+
+# Ver apenas logs da app
+docker compose -f docker-compose.prod.yaml logs -f app
+```
+
+**Se aparecer "Up (unhealthy)", aguarde alguns segundos para o healthcheck passar.**
 
 ---
 
