@@ -371,7 +371,8 @@ server {
 }
 
 server {
-    listen 443 ssl http2;
+    listen 443 ssl;
+    http2 on;
     server_name seu-dominio.com www.seu-dominio.com;
 
     # Certificados SSL (Cloudflare Origin Certificates)
@@ -379,7 +380,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/cloudflare-origin.key;
 
     # Configurações SSL seguras
-    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_protocols TLSv1.3;
     ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
     ssl_prefer_server_ciphers off;
 
@@ -419,20 +420,17 @@ server {
 }
 ```
 
-### 4.3. Ativar configuração
+### 4.3. Ativar configuração (SEM RECARREGAR AINDA)
 ```bash
 # Criar link simbólico
 sudo ln -s /etc/nginx/sites-available/api-ai /etc/nginx/sites-enabled/
 
 # Remover configuração default
 sudo rm /etc/nginx/sites-enabled/default
-
-# Testar configuração
-sudo nginx -t
-
-# Recarregar Nginx
-sudo systemctl reload nginx
 ```
+
+**⚠️ NÃO teste/recarregue o nginx ainda! Os certificados SSL ainda não existem.**
+**Continue para FASE 5 para configurar Cloudflare e criar os certificados.**
 
 ---
 
@@ -454,7 +452,11 @@ A       www               <IP_VPS_NETCUP>   Proxied (laranja)
 ### 5.3. Gerar Certificado Origin (Cloudflare ↔ VPS)
 1. Cloudflare Dashboard > SSL/TLS > Origin Server
 2. Create Certificate
-3. Copiar certificado e chave privada
+3. **Escolher:**
+   - Hostnames: `seu-dominio.com` e `*.seu-dominio.com`
+   - Validade: 15 anos
+   - Formato: PEM
+4. Copiar certificado e chave privada
 
 Na VPS:
 ```bash
@@ -463,18 +465,27 @@ sudo mkdir -p /etc/nginx/ssl
 
 # Salvar certificado
 sudo nano /etc/nginx/ssl/cloudflare-origin.pem
-# Colar certificado
+# Colar o CERTIFICADO aqui (começando com -----BEGIN CERTIFICATE-----)
 
 # Salvar chave privada
 sudo nano /etc/nginx/ssl/cloudflare-origin.key
-# Colar chave privada
+# Colar a CHAVE PRIVADA aqui (começando com -----BEGIN PRIVATE KEY-----)
 
 # Permissões restritas
 sudo chmod 600 /etc/nginx/ssl/cloudflare-origin.key
 sudo chmod 644 /etc/nginx/ssl/cloudflare-origin.pem
 
-# Reiniciar Nginx
+# AGORA SIM, testar configuração nginx
+sudo nginx -t
+
+# Se testar OK, recarregar Nginx
 sudo systemctl reload nginx
+```
+
+**Verificar se Nginx está rodando:**
+```bash
+sudo systemctl status nginx
+# Deve mostrar: active (running)
 ```
 
 ### 5.4. Configurar SSL/TLS Mode
@@ -485,14 +496,51 @@ Cloudflare > SSL/TLS > Overview:
 - **SSL/TLS > Edge Certificates:**
   - ✅ Always Use HTTPS: ON
   - ✅ HTTP Strict Transport Security (HSTS): Enable
-  - ✅ Minimum TLS Version: 1.2
+  - ✅ Minimum TLS Version: 1.3
 
 - **Security > WAF:**
-  - ✅ Managed Rules: ON
-  - ✅ OWASP Core Ruleset: ON
+  - ✅ Cloudflare managed ruleset: ON
 
 - **Security > Bots:**
   - ✅ Bot Fight Mode: ON
+
+### 5.6. Configurar bypass para endpoints de API (IMPORTANTE)
+
+**⚠️ Bot Fight Mode bloqueia curl e requisições de API!**
+
+Se sua aplicação é uma API REST, configure bypass:
+
+**Security > WAF > Custom Rules > Create rule:**
+
+```
+Rule name: Allow API and Actuator
+When incoming requests match:
+  - Field: URI Path
+  - Operator: starts with  
+  - Value: /api
+
+OR
+
+  - Field: URI Path
+  - Operator: starts with
+  - Value: /actuator
+
+Then:
+  - Action: Skip
+  - Select: Bot Fight Mode
+```
+
+**Isso permite:**
+- ✅ Requisições de API de aplicativos/scripts
+- ✅ Monitoramento via curl
+- ✅ Integrações externas
+- 🛡️ Mantém proteção WAF e rate limiting
+
+**Testar depois:**
+```bash
+curl https://novak.dev.br/actuator/health
+# Deve retornar: {"status":"UP"}
+```
 
 ---
 
