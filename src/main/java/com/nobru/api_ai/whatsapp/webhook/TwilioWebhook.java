@@ -1,4 +1,4 @@
-package com.nobru.api_ai.whatsapp;
+package com.nobru.api_ai.whatsapp.webhook;
 
 import com.nobru.api_ai.whatsapp.usecase.ProcessMessageWhatsApp;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-public class TwilioWebhookController {
+public class TwilioWebhook {
 
     private final ProcessMessageWhatsApp processMessageWhatsApp;
 
